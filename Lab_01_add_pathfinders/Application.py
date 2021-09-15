@@ -226,8 +226,9 @@ class App:
         self.player.draw()
         for enemy in self.enemies:
             enemy.draw()
-            enemy.path = enemy.search_way(vec(enemy.position), self.player.grid_pos)
+            # enemy.path = enemy.BFS(vec(enemy.position), self.player.grid_pos)
             # enemy.path = enemy.DFS(vec(enemy.position), self.player.grid_pos)
+            enemy.path = enemy.UCS(vec(enemy.position), self.player.grid_pos)
             enemy.draw_path()
         pygame.display.update()
 

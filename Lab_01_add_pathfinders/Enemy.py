@@ -1,10 +1,12 @@
 import asyncio
+import random
 import time
-
+import timeit
 import numpy as np
 import pygame
 from Constants import *
 vec = pygame.math.Vector2
+
 import queue
 
 class Enemy:
@@ -18,10 +20,11 @@ class Enemy:
         self.position = start_position
         self.pix_position = self.get_pix_pos()
         self.path = None
+        # self.exec_timer()
         # self.path = self.UCS(vec(1, 1), vec(1, 25))
-        # self.path = self.search_way(vec(1, 1), vec(26, 9))
+        # self.path = self.BFS(vec(1, 1), vec(26, 9))
         # self.path = self.DFS(vec(1, 1), vec(26, 9))
-        # self.path = self.search_way(vec(1, 1), vec(26, 9))
+        # self.path = self.BFS(vec(1, 1), vec(26, 9))
 
 
     def draw(self):
@@ -42,11 +45,11 @@ class Enemy:
                    (self.position[1]*self.application.cell_height) +
                    PADDING // 2 + self.application.cell_height // 2)
 
-    def search_way(self, start, target):
+    def BFS(self, start, target):
         grid = self.load_grid()
 
         if not self.is_valid_target(target):
-            print("НЕ СТАВЬ В СТЕНУ")
+            print("your goal is wall")
             return [start]
         queue = [start]
         path = []
@@ -78,7 +81,7 @@ class Enemy:
     def DFS(self, start, target):
         grid = self.load_grid()
         if not self.is_valid_target(target):
-            print("НЕ СТАВЬ В СТЕНУ")
+            print("your goal is wall")
             return [start]
 
         stack = [start]
@@ -110,10 +113,9 @@ class Enemy:
     def UCS(self, start, target):
         grid = self.load_grid()
         if not self.is_valid_target(target):
-            print("НЕ СТАВЬ В СТЕНУ")
+            print("your goal is wall")
             return [start]
         graph = self.grid_to_graph(grid)
-        print(graph)
         visited = set()
         start = (int(start.y), int(start.x))
         target = (int(target.y), int(target.x))
@@ -175,3 +177,34 @@ class Enemy:
             return False
         else:
             return True
+
+    def exec_timer(self):
+        ucs = []
+        bfs = []
+        dfs = []
+        for i in range(10):
+            start = np.random.randint(1, 25, (1, 2))[0]
+            target = np.random.randint(1, 25, (1, 2))[0]
+            start = vec(start[0], start[1])
+            target = vec(target[0], target[1])
+
+            if self.is_valid_target(start) and self.is_valid_target(target):
+                start_time = time.time()
+                for i in range(100):
+                    self.UCS(start, target)
+                ucs.append(time.time() - start_time)
+
+                start_time = time.time()
+                for i in range(100):
+                    self.BFS(start, target)
+                bfs.append(time.time() - start_time)
+
+                start_time = time.time()
+                for i in range(100):
+                    self.DFS(start, target)
+                dfs.append(time.time() - start_time)
+
+        print(f"Середній час виконання UCS = {np.mean(ucs)}")
+        print(f"Середній час виконання BFS = {np.mean(bfs)}")
+        print(f"Середній час виконання DFS = {np.mean(dfs)}")
+
