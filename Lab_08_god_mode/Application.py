@@ -45,11 +45,20 @@ class App:
                                       "player_god": self.god,
                                       "player_can_eat_enemies": self.eat_enemies,
                                       "player_set_score_for_coin": self.set_score_for_coin,
-                                      "player_set_score": self.set_score
+                                      "player_set_score": self.set_score,
+                                      "bot_add": self.add_bot_to_field,
                                       },
                            key_calls={},
                            vari={"A": 100, "B": 200, "C": 300},
                            syntax={re_function: console_func})
+
+
+    def add_bot_to_field(self, value):
+        if 4 >= value > 0:
+            for _ in range(value):
+                empty_positions = self.map_generator.get_empty_blocks_positions()
+                position = random.choice(empty_positions)
+                self.enemies.append(Enemy(self, vec(position[::-1]), RANDOM))
 
     def set_score(self, value):
         self.player.current_score = value

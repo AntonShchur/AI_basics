@@ -3,7 +3,7 @@ from string import ascii_letters
 import textwrap
 import re
 
-# I dont know what this means???
+
 re_token = re.compile(r"""[\"].*?[\"]|[\{].*?[\}]|[\(].*?[\)]|[\[].*?[\]]|\S+""")
 re_is_list = re.compile(r'^[{\[(]')
 re_is_number = re.compile(r"""
